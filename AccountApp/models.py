@@ -16,8 +16,13 @@ def validate_past_date(value):
         raise ValidationError("La date de naissance doit être antérieure à la date du jour.")
 
 
-class Specialty(models.Model):
+class Speciality(models.Model):
     name = models.CharField('Nom', max_length=255)
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    class Meta:
+        verbose_name="Speciality"
+        verbose_name_plural="Specialities"
 
     def __str__(self):
         return self.name
@@ -34,8 +39,11 @@ class Doctor(User):
         unique=True,
         validators=[MinLengthValidator(6)],
     )
+    class Meta:
+            verbose_name="Doctor"
+            verbose_name_plural="Doctors"
     phone = models.CharField('Téléphone', max_length=8, validators=[phone_validator])
-    specialties = models.ManyToManyField(Specialty, related_name='doctors')
+    specialties = models.ManyToManyField(Speciality, related_name='doctors')
 
     def __str__(self):
         return f"Dr {self.last_name} {self.first_name}"
@@ -48,6 +56,9 @@ class Patient(User):
         unique=True,
         validators=[RegexValidator(r'^\d{8}$', "Le CIN doit contenir exactement 8 chiffres.")],
     )
+    class Meta:
+            verbose_name="Patient"
+            verbose_name_plural="Patients"
     phone = models.CharField('Téléphone', max_length=8, validators=[phone_validator])
     birth_date = models.DateField('Date de naissance', validators=[validate_past_date])
 

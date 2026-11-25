@@ -1,8 +1,17 @@
 from django.contrib import admin
-from .models import *
+from .models import Doctor, Patient, Speciality, User
 
 # Register your models here.
 admin.site.register(User)
 admin.site.register(Patient)
-admin.site.register(Doctor)
-admin.site.register(Specialty)
+
+#class AppointmentStacked(admin.TabularInline):
+class AppointmentStacked(admin.StackedInline):
+    model=Appointment
+    extra=1
+
+class DoctorPersoClass(admin, ModelAdmin):
+    inlines=[AppointmentStacked,]
+admin.site.register(Doctor, DoctorPersoClass)
+
+admin.site.register(Speciality)
