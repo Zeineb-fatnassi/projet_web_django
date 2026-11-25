@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'GestionCabinetMedical.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / '3A26.sqlite3',
+        'NAME': BASE_DIR / 'Fatnassi_Zeineb.sqlite3',
     }
 }
 
@@ -128,3 +128,4 @@ AUTH_USER_MODEL = 'AccountApp.User'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+AUTH__USER_MODEL = 'AccountApp.user'

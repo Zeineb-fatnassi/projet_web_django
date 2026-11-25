@@ -44,23 +44,22 @@ class Appointment(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['doctor', 'appointment_date'],
-                name='unique_doctor_appointment_date',
+                name='unicite_patient_doctor_date',
+                violation_error_message="ce docteur possède un rendez-vouz à cette date"
             )
         ]
 
     def clean(self):
-        super().clean()
-        if not self.appointment_date:
-            return
-        date_changed = self._state.adding
-        if not date_changed:
-            old = (Appointment.objects.filter(pk=self.pk)
-                   .values_list('appointment_date', flat=True).first())
-            date_changed = old != self.appointment_date
-        if date_changed and self.appointment_date <= timezone.now():
-            raise ValidationError(
-                {'appointment_date': "La date du rendez-vous doit être postérieure à maintenant."}
-            )
+        modified_date = self._state.adding or (
+            Appointment.objects.filter (
+                pk=self.pk,
+                appointment_date=self.appointment_date
+            ).exists()
+        )
+        if self.appointment_date<=timezone.now():
+            raise ValidationError("la date rdv doit etre superieure à la date d'aujourd'hui")
+        
+        
 
     def __str__(self):
         return f"RDV {self.appointment_date:%d/%m/%Y %H:%M} - {self.doctor} / {self.patient}"
